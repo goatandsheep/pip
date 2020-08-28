@@ -19,13 +19,13 @@
         id="video-main"
         allow="accelerometer; autoplay; encrypted-media; gyroscope"
         allowfullscreen
-        >No main video found. Set your v1 value below.</iframe
-      >
+        disablePictureInPicture
+        >No main video found. Set your v1 value below.</iframe>
+    <br>
       <iframe
         id="video-pip"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        >No PIP video found. Set your v2 value below.</iframe
-      >
+        >No PIP video found. Set your v2 value below.</iframe>
     </main>
     <aside>
       <a
@@ -67,8 +67,8 @@
           const link2 = addTube(v2);
           document.getElementById("video1-input").value = link1;
           document.getElementById("video2-input").value = link2;
-          document.getElementById("video-main").src = link1 + "?controls=0";
-          document.getElementById("video-pip").src = link2;
+          document.getElementById("video-main").src = link1 + "?cc_load_policy=1&origin=" + window.location.host;
+          document.getElementById("video-pip").src = link2 + "?origin=" + window.location.host + "&controls=0";
         } else if (v1) {
           document.getElementById("video1-input").value = addTube(v1);
         } else if (v2) {
@@ -130,11 +130,17 @@
         return filtered;
       }
       function stripTube(link) {
+        if (link.indexOf('/embed/')) {
+            return link.split('/embed/')[1].split('?')[0]
+        } else if (link.match(/^https\:\/\/youtu\.be\/\w+$/)) {
+            let parts = link.split('/')
+            return parts.pop().split('?')[0]
+        }
         const query = queryObject(link.split("?")[1]);
         return query.v;
       }
       function addTube(vId) {
-        return "https://www.youtube.com/embed?v=" + vId;
+        return "https://www.youtube.com/embed/" + vId;
       }
     </script>
   </body>
