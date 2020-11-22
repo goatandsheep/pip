@@ -1,4 +1,91 @@
 // JavaScript source code
+
+const videoPlayerId = 'video-main';
+const videoPipId = 'video-pip';
+
+
+var playerMain;
+var playerPip;
+
+// TODO: debounce
+
+let debouncer = true
+let mainReady = false
+let pipReady = false
+
+function onPlayerReady(event) {
+    // document.getElementById(event.target.f.id).style.borderColor = '#FF6D00';
+    // playerMain.seekTo(0)
+    mainReady = true
+}
+
+function onPipReady(event) {
+    // playerPip.playVideo()
+    // playerPip.pauseVideo()
+    playerPip.seekTo(0)
+    pipReady = true
+}
+function changeBorderColor(elId, playerStatus) {
+    var color;
+    let thePlayer = elId === videoPlayerId ? playerMain : playerPip
+    let altPlayer = elId === videoPlayerId ? playerPip : playerMain
+    if (playerStatus == -1) {
+        color = "#37474F"; // unstarted = gray
+    } else if (playerStatus == 0) {
+        color = "#FFFF00"; // ended = yellow
+    } else if (playerStatus == 1) {
+        color = "#33691E"; // playing = green
+        console.log('theplayer', thePlayer)
+        // let time = thePlayer.getCurrentTime()
+        // altPlayer.seekTo(time)
+        altPlayer.playVideo()
+    } else if (playerStatus == 2) {
+        altPlayer.pauseVideo();
+        color = "#DD2C00"; // paused = red
+    } else if (playerStatus == 3) {
+        color = "#AA00FF"; // buffering = purple
+        altPlayer.playVideo();
+    } else if (playerStatus == 5) {
+        color = "#FF6DOO"; // video cued = orange
+    }
+    if (color) {
+        // keep for dev
+        // document.getElementById(elId).style.borderColor = color;
+    }
+}
+function onPlayerStateChange(event) {
+    console.log('state', event)
+    if (mainReady && pipReady && debouncer) {
+        changeBorderColor(event.target.f.id, event.data);
+        debouncer = false
+        setTimeout(function () {
+            debouncer = true
+        }, 200)
+    }
+}
+
+function onPlayerError(err) {
+    console.error(err)
+}
+
+function onYouTubeIframeAPIReady() {
+
+    playerMain = new YT.Player(videoPlayerId, {
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError
+        }
+    });
+
+    playerPip = new YT.Player(videoPipId, {
+        events: {
+            'onReady': onPipReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError
+        }
+    });
+}
 window.onload = function () {
     let query = queryObject(window.location.search);
     const v1 = query.v1 || "";
@@ -11,8 +98,8 @@ window.onload = function () {
         document.getElementById("video2-input").value = link2;
         const vMainEl = document.getElementById("video-main");
         const vPipEl = document.getElementById("video-pip");
-        vMainEl.src = link1 + "?cc_load_policy=1&origin=" + window.location.host;
-        vPipEl.src = link2 + "?origin=" + window.location.host + "&controls=0";
+        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1&origin=" + window.location.host;
+        vPipEl.src = link2 + "?origin=" + window.location.host + "&controls=0&enablejsapi=1";
         vMainEl.classList.add('active');
         vPipEl.classList.add('active');
         createLink(v1, v2);
@@ -21,6 +108,12 @@ window.onload = function () {
     } else if (v2) {
         document.getElementById("video2-input").value = addTube(v2);
     }
+
+    var tag = document.createElement('script');
+    tag.id = 'iframe-demo';
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 };
 function queryObject(queryString) {
     let queryStrings = queryString.replace("?", "").split("&");

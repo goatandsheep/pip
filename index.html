@@ -15,14 +15,14 @@
 <body>
     <main>
         <h1>Picture In Picture Viewer for YouTube</h1>
-        <h2>Main</h2>
+        <h2>Main Viewer</h2>
         <iframe id="video-main"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope"
                 allowfullscreen
                 disablePictureInPicture
-                enablejsapi="1"
-                playsinline="1"
-                fs="0"
+                frameborder="0"
+        style="border: solid 4px #37474F"
+
         >
             No main video found. Set your v1 value below.
         </iframe>
@@ -76,51 +76,6 @@
         </strong>
     </noscript>
     <script src="index.js" type="text/javascript"></script>
-
-    <script type="text/javascript">
-        var tag = document.createElement('script');
-        tag.id = 'iframe-demo';
-        tag.src = 'https://www.youtube.com/iframe_api';
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        const videoPlayerId = 'video-main';
-
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player(videoPlayerId, {
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-        function onPlayerReady(event) {
-            document.getElementById(videoPlayerId).style.borderColor = '#FF6D00';
-        }
-        function changeBorderColor(playerStatus) {
-            var color;
-            if (playerStatus == -1) {
-                color = "#37474F"; // unstarted = gray
-            } else if (playerStatus == 0) {
-                color = "#FFFF00"; // ended = yellow
-            } else if (playerStatus == 1) {
-                color = "#33691E"; // playing = green
-            } else if (playerStatus == 2) {
-                color = "#DD2C00"; // paused = red
-            } else if (playerStatus == 3) {
-                color = "#AA00FF"; // buffering = purple
-            } else if (playerStatus == 5) {
-                color = "#FF6DOO"; // video cued = orange
-            }
-            if (color) {
-                document.getElementById(videoPlayerId).style.borderColor = color;
-            }
-        }
-        function onPlayerStateChange(event) {
-            changeBorderColor(event.data);
-        }
-    </script>
 
 </body>
 </html>
