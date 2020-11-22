@@ -1,14 +1,6 @@
 # pip
+
 Picture in picture video viewer for ASL
 
-## Features
+[YouTube API](https://developers.google.com/youtube/iframe_api_reference#seekTo)
 
-* resize
-
-### TODO
-
-* dashboard:
-	* pause / play video
-	* show 
-* make main video full size
-* 
