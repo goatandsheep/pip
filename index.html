@@ -1,153 +1,126 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/turretcss/dist/turretcss.min.css"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet"
+          href="https://unpkg.com/turretcss/dist/turretcss.min.css"
+          crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="index.css"
+          />
     <title>Picture in Picture</title>
-  </head>
-  <body class="container">
-    <h1>Picture In Picture Viewer for YouTube</h1>
+</head>
+<body>
     <main>
-      <h2>Watch</h2>
-      <iframe
-        id="video-main"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope"
-        allowfullscreen
-        disablePictureInPicture
-        >No main video found. Set your v1 value below.</iframe>
-    <br>
-      <iframe
-        id="video-pip"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        >No PIP video found. Set your v2 value below.</iframe>
+        <h1>Picture In Picture Viewer for YouTube</h1>
+        <h2>Main</h2>
+        <iframe id="video-main"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope"
+                allowfullscreen
+                disablePictureInPicture
+                enablejsapi="1"
+                playsinline="1"
+                fs="0"
+        >
+            No main video found. Set your v1 value below.
+        </iframe>
+        <div class="container">
+            <h2>PIP viewer</h2>
+            <iframe id="video-pip"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    enablejsapi="1"
+            >
+                No PIP video found. Set your v2 value below.
+            </iframe>
+        </div>
     </main>
-    <aside>
-      <a
-        href="https://www.pcmag.com/how-to/how-to-enable-picture-in-picture-video-in-your-browser"
-        >Make sure PIP is enabled in your browser</a
-      >
+    <aside class="container">
+        <a href="https://www.pcmag.com/how-to/how-to-enable-picture-in-picture-video-in-your-browser">Make sure PIP is enabled in your browser</a>
     </aside>
-    <div>
-      <h2>Create video link</h2>
-      <form onsubmit="return createLinkHandler(event)">
-        <p class="field input-group">
-          <label for="video1-input">Video 1 (main)</label>
-          <input id="video1-input" type="text" name="video1" required />
-        </p>
-        <p class="field input-group">
-          <label for="video2-input">Video 2 (PIP)</label>
-          <input id="video2-input" type="text" name="video2" required />
-        </p>
-        <button type="submit" class="button button-primary">Create link</button>
-        <button type="reset" class="button button-secondary">Reset</button>
-      </form>
-      <label for="new-link">Result link</label>
-      <input readonly id="new-link-text" />
-      <a id="new-link" href="#">Go to page</a>
+    <div class="container">
+        <h2>Create video link</h2>
+        <form onsubmit="return createLinkHandler(event)">
+            <p class="field input-group">
+                <label for="video1-input">Video 1 (main)</label>
+                <input id="video1-input" type="text" name="video1" required />
+            </p>
+            <p class="field input-group">
+                <label for="video2-input">Video 2 (PIP)</label>
+                <input id="video2-input" type="text" name="video2" required />
+            </p>
+            <button type="submit" class="button button-primary">Create link</button>
+            <button type="reset" class="button button-secondary">Reset</button>
+        </form>
+        <label for="new-link">Result link</label>
+        <input readonly id="new-link-text" />
+        <a id="new-link" href="#">Go to page</a>
+    </div>
+    <hr />
+    <div class="container">
+        <h2>PIP Troubleshooting</h2>
+        <div>
+            <h3>PIP on Chrome</h3>
+            <img src="chrome-help.gif" alt="How to enable PIP on Chrome browser" />
+        </div>
+        <div>
+            <h3>PIP on Firefox</h3>
+            <img src="ff-help.PNG" alt="How to enable PIP on Firefox browser" />
+        </div>
     </div>
     <noscript>
-      <strong
-        >We're sorry but communote doesn't work properly without JavaScript
-        enabled. Please enable it to continue.</strong
-      >
+        <strong>
+            We're sorry but communote doesn't work properly without JavaScript
+            enabled. Please enable it to continue.
+        </strong>
     </noscript>
-    <script>
-      window.onload = function () {
-        let query = queryObject(window.location.search);
-        const v1 = query.v1 || "";
-        const v2 = query.v2 || "";
-        if (v1 && v2) {
-          const link1 = addTube(v1);
-          const link2 = addTube(v2);
-          document.getElementById("video1-input").value = link1;
-          document.getElementById("video2-input").value = link2;
-          document.getElementById("video-main").src = link1 + "?cc_load_policy=1&origin=" + window.location.host;
-          document.getElementById("video-pip").src = link2 + "?origin=" + window.location.host + "&controls=0";
-          createLink(v1, v2);
-        } else if (v1) {
-          document.getElementById("video1-input").value = addTube(v1);
-        } else if (v2) {
-          document.getElementById("video2-input").value = addTube(v2);
-        }
-      };
-      function queryObject(queryString) {
-        let queryStrings = queryString.replace("?", "").split("&");
-        let query = {};
-        for (let i = 0, len = queryStrings.length; i < len; i++) {
-          const parts = queryStrings[i].split("=");
-          query[parts[0]] = parts[1];
-        }
-        return query;
-      }
-      function createLinkHandler(evt) {
-        evt.preventDefault();
-        const inputs = filterForms(evt.target);
-        const v1 = stripTube(inputs.video1);
-        const v2 = stripTube(inputs.video2);
-        if (v1 && v2) {
-          createLink(v1, v2);
-        }
-      }
-      function createLink(v1, v2) {
-        const link =
-          window.location.href.split("?")[0] + "?v1=" + v1 + "&v2=" + v2;
-        document.getElementById("new-link").href = link;
-        document.getElementById("new-link-text").value = link;
-      }
-      function filterForms(target) {
-        const inputs = target.querySelectorAll("input");
-        let filtered = {};
+    <script src="index.js" type="text/javascript"></script>
 
-        inputs.forEach((entry) => {
-          const name = entry.name;
-          if (entry.multiple) {
-            const options = entry.selectedOptions;
-            const files = entry.files;
-            const values = [];
-            if (options) {
-              for (let pair of options) {
-                values.push(pair.value);
-              }
-            } else if (files) {
-              for (let file of files) {
-                values.push(file);
-              }
-            }
-            if (values.length) {
-              filtered[name] = values;
-            }
-          } else {
-            const val = entry.value;
-            if (typeof val === "string") {
-              filtered[name] = val;
-            }
-          }
-        });
-        return filtered;
-      }
-      function stripTube(link) {
-        try {
-          if (link.indexOf('/embed/') >= 0) {
-              return link.split('/embed/')[1].split('?')[0]
-          } else if (link.match(/^https\:\/\/youtu\.be\/\w+$/)) {
-              let parts = link.split('/')
-              return parts.pop().split('?')[0]
-          }
-          const query = queryObject(link.split('?')[1]);
-          return query.v;
-        } catch (err) {
-          throw err;
+    <script type="text/javascript">
+        var tag = document.createElement('script');
+        tag.id = 'iframe-demo';
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        const videoPlayerId = 'video-main';
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player(videoPlayerId, {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
         }
-      }
-      function addTube(vId) {
-        return "https://www.youtube.com/embed/" + vId;
-      }
+        function onPlayerReady(event) {
+            document.getElementById(videoPlayerId).style.borderColor = '#FF6D00';
+        }
+        function changeBorderColor(playerStatus) {
+            var color;
+            if (playerStatus == -1) {
+                color = "#37474F"; // unstarted = gray
+            } else if (playerStatus == 0) {
+                color = "#FFFF00"; // ended = yellow
+            } else if (playerStatus == 1) {
+                color = "#33691E"; // playing = green
+            } else if (playerStatus == 2) {
+                color = "#DD2C00"; // paused = red
+            } else if (playerStatus == 3) {
+                color = "#AA00FF"; // buffering = purple
+            } else if (playerStatus == 5) {
+                color = "#FF6DOO"; // video cued = orange
+            }
+            if (color) {
+                document.getElementById(videoPlayerId).style.borderColor = color;
+            }
+        }
+        function onPlayerStateChange(event) {
+            changeBorderColor(event.data);
+        }
     </script>
-  </body>
+
+</body>
 </html>

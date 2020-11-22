@@ -1,0 +1,9 @@
+﻿
+#video-main.active {
+    width: 100%;
+    height: 100vh;
+}
+
+#video-pip.active {
+    width: 100%;
+}
