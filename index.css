@@ -4,6 +4,13 @@
     height: 100vh;
 }
 
+
 #video-pip.active {
     width: 100%;
+}
+
+@media (max-width: 900px) {
+    #video-pip {
+        min-height: 300px;
+    }
 }

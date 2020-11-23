@@ -15,17 +15,17 @@
 <body>
     <main>
         <h1>Picture In Picture Viewer for YouTube</h1>
-        <h2>Main Viewer</h2>
-        <iframe id="video-main"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope"
-                allowfullscreen
-                disablePictureInPicture
-                frameborder="0"
-        style="border: solid 4px #37474F"
-
-        >
-            No main video found. Set your v1 value below.
-        </iframe>
+        <div id="main-viewer-container" class="container">
+            <h2>Main Viewer</h2>
+            <iframe id="video-main"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope"
+                    allowfullscreen
+                    disablePictureInPicture
+                    frameborder="0"
+                    style="border: solid 2px #37474F">
+                No main video found. Set your v1 value below.
+            </iframe>
+        </div>
         <div class="container">
             <h2>PIP viewer</h2>
             <iframe id="video-pip"

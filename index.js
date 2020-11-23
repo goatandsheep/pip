@@ -20,9 +20,9 @@ function onPlayerReady(event) {
 }
 
 function onPipReady(event) {
-    // playerPip.playVideo()
-    // playerPip.pauseVideo()
-    playerPip.seekTo(0)
+    playerPip.playVideo()
+    playerPip.pauseVideo()
+    // playerPip.seekTo(0)
     pipReady = true
 }
 function changeBorderColor(elId, playerStatus) {
@@ -94,6 +94,7 @@ window.onload = function () {
         const link1 = addTube(v1);
         const link2 = addTube(v2);
 
+        document.getElementById("main-viewer-container").classList.remove('container')
         document.getElementById("video1-input").value = link1;
         document.getElementById("video2-input").value = link2;
         const vMainEl = document.getElementById("video-main");
