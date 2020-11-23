@@ -10,7 +10,7 @@
 }
 
 @media (max-width: 900px) {
-    #video-pip {
-        min-height: 300px;
+    #video-pip.active {
+        min-height: 315px;
     }
 }
