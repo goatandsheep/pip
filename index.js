@@ -72,21 +72,25 @@ function onPlayerError(err) {
 
 function onYouTubeIframeAPIReady() {
     console.log('youtube iframe ready')
-    playerMain = new YT.Player(videoPlayerId, {
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onPlayerError
-        }
-    });
+    try {
+        playerMain = new YT.Player(videoPlayerId, {
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
 
-    playerPip = new YT.Player(videoPipId, {
-        events: {
-            'onReady': onPipReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onPlayerError
-        }
-    });
+        playerPip = new YT.Player(videoPipId, {
+            events: {
+                'onReady': onPipReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    } catch (err) {
+        console.error('YTPlayer API not working', err)
+    }
 }
 window.onload = function () {
     let query = queryObject(window.location.search);
