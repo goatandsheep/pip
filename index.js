@@ -17,6 +17,7 @@ function onPlayerReady(event) {
     // document.getElementById(event.target.f.id).style.borderColor = '#FF6D00';
     // playerMain.seekTo(0)
     mainReady = true
+    console.log('mainReady')
 }
 
 function onPipReady(event) {
@@ -24,6 +25,7 @@ function onPipReady(event) {
     playerPip.pauseVideo()
     // playerPip.seekTo(0)
     pipReady = true
+    console.log('pipReady')
 }
 function changeBorderColor(elId, playerStatus) {
     var color;
@@ -69,7 +71,7 @@ function onPlayerError(err) {
 }
 
 function onYouTubeIframeAPIReady() {
-
+    console.log('youtube iframe ready')
     playerMain = new YT.Player(videoPlayerId, {
         events: {
             'onReady': onPlayerReady,
