@@ -91,7 +91,18 @@ function onYouTubeIframeAPIReady() {
     } catch (err) {
         console.error('YTPlayer API not working', err)
     }
+
 }
+
+function playAll() {
+    playerMain.playVideo()
+    playerPip.playVideo()
+}
+function pauseAll() {
+    playerMain.pauseVideo()
+    playerPip.pauseVideo()
+}
+
 window.onload = function () {
     let query = queryObject(window.location.search);
     const v1 = query.v1 || "";

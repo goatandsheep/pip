@@ -30,10 +30,13 @@
             <h2>PIP viewer</h2>
             <iframe id="video-pip"
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    enablejsapi="1"
-            >
+                    enablejsapi="1">
                 No PIP video found. Set your v2 value below.
             </iframe>
+        </div>
+        <div class="container">
+            <button class="button button-primary" onclick="playAll()">Play All</button>
+            <button class="button button-secondary" onclick="pauseAll()">Pause All</button>
         </div>
     </main>
     <aside class="container">
