@@ -126,10 +126,12 @@ window.onload = function () {
         document.getElementById("video2-input").value = link2;
         const vMainEl = document.getElementById("video-main");
         const vPipEl = document.getElementById("video-pip");
-        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1"
-        // + "&origin=" + window.location.host;
-        vPipEl.src = link2 + "?controls=0&enablejsapi=1";
-        // + "&origin=" + window.location.host
+        let origin = window.location.host;
+        if (origin) {
+            origin = window.location.protocol + '//' + origin
+        }
+        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1&origin=" + origin;
+        vPipEl.src = link2 + "?origin=" + origin + "&controls=0&enablejsapi=1";
         vMainEl.classList.add('active');
         vPipEl.classList.add('active');
         createLink(v1, v2);
