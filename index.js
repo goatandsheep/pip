@@ -92,7 +92,7 @@ function loadPlayers() {
     }
 }
 
-function onYouTubeIframeAPIReady() {
+window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
     console.log('youtube iframe ready')
     let isYtReady = setInterval(function () {
         if (YT.loaded) {
@@ -126,8 +126,10 @@ window.onload = function () {
         document.getElementById("video2-input").value = link2;
         const vMainEl = document.getElementById("video-main");
         const vPipEl = document.getElementById("video-pip");
-        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1&origin=" + window.location.host;
-        vPipEl.src = link2 + "?origin=" + window.location.host + "&controls=0&enablejsapi=1";
+        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1"
+        // + "&origin=" + window.location.host;
+        vPipEl.src = link2 + "?controls=0&enablejsapi=1";
+        // + "&origin=" + window.location.host
         vMainEl.classList.add('active');
         vPipEl.classList.add('active');
         createLink(v1, v2);
