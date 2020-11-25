@@ -4,8 +4,8 @@ const videoPlayerId = 'video-main';
 const videoPipId = 'video-pip';
 
 
-var playerMain;
-var playerPip;
+window.playerMain;
+window.playerPip;
 
 // TODO: debounce
 
@@ -15,22 +15,22 @@ let pipReady = false
 
 function onPlayerReady(event) {
     // document.getElementById(event.target.f.id).style.borderColor = '#FF6D00';
-    // playerMain.seekTo(0)
+    // window.playerMain.seekTo(0)
     mainReady = true
     console.log('mainReady')
 }
 
 function onPipReady(event) {
-    playerPip.playVideo()
-    playerPip.pauseVideo()
-    // playerPip.seekTo(0)
+    window.playerPip.playVideo()
+    window.playerPip.pauseVideo()
+    // window.playerPip.seekTo(0)
     pipReady = true
     console.log('pipReady')
 }
 function changeBorderColor(elId, playerStatus) {
     var color;
-    let thePlayer = elId === videoPlayerId ? playerMain : playerPip
-    let altPlayer = elId === videoPlayerId ? playerPip : playerMain
+    let thePlayer = elId === videoPlayerId ? window.playerMain : window.playerPip
+    let altPlayer = elId === videoPlayerId ? window.playerPip : window.playerMain
     if (playerStatus == -1) {
         color = "#37474F"; // unstarted = gray
     } else if (playerStatus == 0) {
@@ -70,10 +70,9 @@ function onPlayerError(err) {
     console.error(err)
 }
 
-function onYouTubeIframeAPIReady() {
-    console.log('youtube iframe ready')
+function loadPlayers() {
     try {
-        playerMain = new YT.Player(videoPlayerId, {
+        window.playerMain = new YT.Player(videoPlayerId, {
             events: {
                 'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange,
@@ -81,7 +80,7 @@ function onYouTubeIframeAPIReady() {
             }
         });
 
-        playerPip = new YT.Player(videoPipId, {
+        window.playerPip = new YT.Player(videoPipId, {
             events: {
                 'onReady': onPipReady,
                 'onStateChange': onPlayerStateChange,
@@ -91,16 +90,27 @@ function onYouTubeIframeAPIReady() {
     } catch (err) {
         console.error('YTPlayer API not working', err)
     }
+}
+
+function onYouTubeIframeAPIReady() {
+    console.log('youtube iframe ready')
+    let isYtReady = setInterval(function () {
+        if (YT.loaded) {
+            console.log('loaded')
+            loadPlayers()
+            clearInterval(isYtReady)
+        }
+    }, 100)
 
 }
 
 function playAll() {
-    playerMain.playVideo()
-    playerPip.playVideo()
+    window.playerMain.playVideo()
+    window.playerPip.playVideo()
 }
 function pauseAll() {
-    playerMain.pauseVideo()
-    playerPip.pauseVideo()
+    window.playerMain.pauseVideo()
+    window.playerPip.pauseVideo()
 }
 
 window.onload = function () {
