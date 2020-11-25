@@ -13,17 +13,21 @@ let debouncer = true
 let mainReady = false
 let pipReady = false
 
+let t1 = 0
+let t2 = 0
+
 function onPlayerReady(event) {
     // document.getElementById(event.target.f.id).style.borderColor = '#FF6D00';
-    // window.playerMain.seekTo(0)
+    window.playerMain.seekTo(t1)
+    window.playerMain.pauseVideo()
     mainReady = true
     console.log('mainReady')
 }
 
 function onPipReady(event) {
-    window.playerPip.playVideo()
-    window.playerPip.pauseVideo()
-    // window.playerPip.seekTo(0)
+    // window.playerPip.playVideo()
+    // window.playerPip.pauseVideo()
+    window.playerPip.seekTo(t2)
     pipReady = true
     console.log('pipReady')
 }
@@ -77,7 +81,8 @@ function loadPlayers() {
                 'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange,
                 'onError': onPlayerError
-            }
+            },
+            startSeconds: t1
         });
 
         window.playerPip = new YT.Player(videoPipId, {
@@ -85,7 +90,8 @@ function loadPlayers() {
                 'onReady': onPipReady,
                 'onStateChange': onPlayerStateChange,
                 'onError': onPlayerError
-            }
+            },
+            startSeconds: t2
         });
     } catch (err) {
         console.error('YTPlayer API not working', err)
@@ -117,6 +123,8 @@ window.onload = function () {
     let query = queryObject(window.location.search);
     const v1 = query.v1 || "";
     const v2 = query.v2 || "";
+    t1 = query.t1 || 0;
+    t2 = query.t2 || 0;
     if (v1 && v2) {
         const link1 = addTube(v1);
         const link2 = addTube(v2);
@@ -130,8 +138,8 @@ window.onload = function () {
         if (origin) {
             origin = window.location.protocol + '//' + origin
         }
-        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1&origin=" + origin;
-        vPipEl.src = link2 + "?origin=" + origin + "&controls=0&enablejsapi=1";
+        vMainEl.src = link1 + "?cc_load_policy=1&enablejsapi=1&t=" + t1 + "&origin=" + origin;
+        vPipEl.src = link2 + "?t=" + t2 + "&controls=0&enablejsapi=1" + "&origin=" + origin;
         vMainEl.classList.add('active');
         vPipEl.classList.add('active');
         createLink(v1, v2);
