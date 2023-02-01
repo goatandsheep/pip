@@ -62,7 +62,7 @@ function changeBorderColor(elId, playerStatus) {
 function onPlayerStateChange(event) {
     console.log('state', event)
     if (mainReady && pipReady && debouncer) {
-        changeBorderColor(event.target.f.id, event.data);
+        changeBorderColor(event.target.h.id, event.data);
         debouncer = false
         setTimeout(function () {
             debouncer = true
@@ -167,15 +167,21 @@ function queryObject(queryString) {
 function createLinkHandler(evt) {
     evt.preventDefault();
     const inputs = filterForms(evt.target);
-    const v1 = stripTube(inputs.video1);
-    const v2 = stripTube(inputs.video2);
+    const [v1, t1] = stripTube(inputs.video1);
+    const [v2, t2] = stripTube(inputs.video2);
     if (v1 && v2) {
-        createLink(v1, v2);
+        createLink(v1, v2, t1, t2);
     }
 }
-function createLink(v1, v2) {
-    const link =
+function createLink(v1, v2, t1, t2) {
+    let link =
         window.location.href.split("?")[0] + "?v1=" + v1 + "&v2=" + v2;
+    if (t1) {
+        link += "&t1=" + t1
+    }
+    if (t2) {
+        link += "&t2=" + t2
+    }
     document.getElementById("new-link").href = link;
     document.getElementById("new-link-text").value = link;
 }
@@ -204,7 +210,7 @@ function filterForms(target) {
         } else {
             const val = entry.value;
             if (typeof val === "string") {
-                filtered[name] = val;
+                filtered[name] = val.trim();
             }
         }
     });
@@ -213,17 +219,23 @@ function filterForms(target) {
 function stripTube(link) {
     try {
         if (link.indexOf('/embed/') >= 0) {
-            return link.split('/embed/')[1].split('?')[0]
-        } else if (link.match(/^https\:\/\/youtu\.be\/\w+$/)) {
+            let parts = link.split('/embed/')
+            const [v, queryString] = parts[1].split('?')
+            const query = queryObject(queryString);
+            return [v, query.t]
+        } else if (link.match(/^https\:\/\/youtu\.be\/\w+/)) {
             let parts = link.split('/')
-            return parts.pop().split('?')[0]
+            const [v, queryString] = parts[3].split('?')
+            const query = queryObject(queryString);
+            return [v, query.t]
         }
         const query = queryObject(link.split('?')[1]);
-        return query.v;
+        return [query.v, query.t];
     } catch (err) {
         throw err;
     }
 }
+
 function addTube(vId) {
     return "https://www.youtube.com/embed/" + vId;
 }
