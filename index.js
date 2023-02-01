@@ -28,6 +28,7 @@ function onPipReady(event) {
     // window.playerPip.playVideo()
     // window.playerPip.pauseVideo()
     window.playerPip.seekTo(t2)
+    window.playerPip.setVolume(1)
     pipReady = true
     console.log('pipReady')
 }
